@@ -1,0 +1,25 @@
+#!/usr/bin/bash
+LIB=../lib
+CODE=../Code
+CoP="$CODE:$LIB/JGrafchart.jar:$LIB/JGo.jar:/opt/java/se.lth.control.realtime.Moberg/jre/lib/ext/Moberg.jar:$LIB/regler.jar:$LIB/xmlBlaster.jar:$LIB/jutils.jar:$LIB/jhall.jar:$LIB/CCOM.jar:$LIB/dpws/dpws4j.jar:$LIB/dpws/soda-JettyServletContainer.jar:$LIB/dpws/soda-jdom.jar:$LIB/dpws/wsdl4j-1.6.1.jar:$LIB/beaver-rt.jar"
+
+LAUNCH_DIR=`pwd`
+cd "`dirname "$0"`"
+export LD_LIBRARY_PATH=/opt/java/se.lth.control.realtime.Moberg/jre/lib/amd64
+java -Djgrafchart.launchdir=$LAUNCH_DIR -classpath $CoP grafchart.sfc.Editor "$@"
+
+# 2 = Invalid command line arguments
+# 127 = Command not found
+# 130 = Terminated by Ctrl+C
+RET=$?
+if [ $RET -ne 0 -a $RET -ne 2 -a $RET -ne 130 ]; then
+	if [ $RET -eq 127 ]; then
+		echo ERROR: Java is not installed properly.
+	else
+		echo ERROR: JGrafchart exited with error code $RET.
+	fi
+	read -s -n 1 -p "Press any key to continue..."
+	echo
+fi
+
+exit $RET
